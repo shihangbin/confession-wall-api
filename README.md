@@ -11,6 +11,8 @@ npm i @koa/router
 npm i @koa/bodyparser
 # 安装env解析
 npm i dotenv
+# mysql2
+npm i mysql2
 ```
 
 ## 项目结构
@@ -65,15 +67,46 @@ module.exports = app
 
 ```js
 const KoaRouter = require('@koa/router')
+const userController = require('../controller/user.controller')
 
 // 创建路由
 const userRouter = new KoaRouter({ prefix: '/users' })
 
 // 定义路由中映射
-userRouter.get('/list', (ctx, next) => {
-  ctx.body = 'users list'
-})
+userRouter.get('/', userController.create)
 
 // 导出路由
 module.exports = userRouter
+```
+
+- controller/user.controller.js
+
+```js
+const userService = require('../service/user.service')
+
+class userController {
+  create(ctx, next) {
+    // 获取用户传递过来的数据
+    const user = ctx.request.body
+    console.log(user)
+
+    // 将user数据存储到数据库
+    userService.create(user)
+
+    // 查看存储结果,告诉前端
+    ctx.body = '创建用户成功'
+  }
+}
+module.exports = new userController()
+```
+
+- service/user.service.js
+
+```js
+class userService {
+  create(user) {
+    console.log('数据库操作成功')
+  }
+}
+module.exports = new userService()
 ```
