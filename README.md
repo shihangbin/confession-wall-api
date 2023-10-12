@@ -19,9 +19,9 @@ npm i mysql2
 
 ![](https://img.xbin.cn/images/2023/10/12-23-07-efa6af.png)
 
-![](https://img.xbin.cn/images/2023/10/10-17-49-01e12c.png)
+![](https://img.xbin.cn/images/2023/10/13-01-46-a23824.png)
 
-- main
+- main (运行文件)
 
 ```js
 // 1.导入app
@@ -36,7 +36,7 @@ app.listen(SERVER_PORT, () => {
 })
 ```
 
-- config/server.config.js
+- config/server.config.js (启动服务器)
 
 ```js
 const dotenv = require('dotenv')
@@ -46,7 +46,7 @@ dotenv.config()
 module.exports = { SERVER_PORT } = process.env
 ```
 
-- app/index.js
+- app/index.js (使用中间件)
 
 ```js
 const Koa = require('koa')
@@ -65,23 +65,24 @@ app.use(userRouter.allowedMethods())
 module.exports = app
 ```
 
-- router/user.router.js
+- router/user.router.js (主路由)
 
 ```js
 const KoaRouter = require('@koa/router')
 const userController = require('../controller/user.controller')
+const { verifyUser } = require('../middleware/user.middleware')
 
 // 创建路由
 const userRouter = new KoaRouter({ prefix: '/users' })
 
 // 定义路由中映射
-userRouter.get('/', userController.create)
+userRouter.get('/', verifyUser, userController.create)
 
 // 导出路由
 module.exports = userRouter
 ```
 
-- controller/user.controller.js
+- controller/user.controller.js (单个路由)
 
 ```js
 const userService = require('../service/user.service')
@@ -104,7 +105,7 @@ class userController {
 module.exports = new userController()
 ```
 
-- service/user.service.js
+- service/user.service.js (操作数据库)
 
 ```js
 class userService {
@@ -128,7 +129,7 @@ class userService {
 module.exports = new userService()
 ```
 
-- app/database
+- app/database (连接数据库)
 
 ```js
 const mysql = require('mysql2')
@@ -164,4 +165,70 @@ connectionPool.getConnection((err, connection) => {
 // 3.获取连接池中连接对象(promise)
 const connection = connectionPool.promise()
 module.exports = connection
+```
+
+- middleware/user.middleware.js (中间件)
+
+```js
+const { emit } = require('../app')
+const userService = require('../service/user.service')
+const {
+  USERNAME_OR_PASSWORD_NULL,
+  USERNAME_EXISTS,
+} = require('../config/error.config')
+
+const verifyUser = async (ctx, next) => {
+  // 用户名密码不能为空
+  const { username, userpassword } = ctx.request.body
+  if (!username || !userpassword) {
+    return emit('error', USERNAME_OR_PASSWORD_NULL, ctx)
+  }
+  // 判断用户名是否存在
+  const users = await userService.findUserByName(username)
+  if (users.length) {
+    return emit('error', USERNAME_EXISTS, ctx)
+  }
+
+  await next()
+}
+
+module.exports = { verifyUser }
+```
+
+- config/error.config.js (错误常量)
+
+```js
+const USERNAME_OR_PASSWORD_NULL = 'username _or_password_null'
+const USERNAME_EXISTS = 'username_exists'
+
+module.exports = {
+  USERNAME_OR_PASSWORD_NULL,
+  USERNAME_EXISTS,
+}
+```
+
+- utils/handle-error.js (错误处理)
+
+```js
+const app = require('../app')
+const {
+  USERNAME_OR_PASSWORD_NULL,
+  USERNAME_EXISTS,
+} = require('../config/error.config')
+
+app.on('error', (error, ctx) => {
+  let code = 0
+  let message = ''
+
+  switch (error) {
+    case USERNAME_OR_PASSWORD_NULL:
+      code = -1001
+      message = '用户名,密码不能为空!'
+      break
+    case USERNAME_EXISTS:
+      code = -1002
+      message = '用户名已经存在!'
+      break
+  }
+})
 ```
