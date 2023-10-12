@@ -7,7 +7,7 @@ const {
 app.on('error', (error, ctx) => {
   let code = 0
   let message = ''
-
+  console.log(error)
   switch (error) {
     case USERNAME_OR_PASSWORD_NULL:
       code = -1001
@@ -18,4 +18,6 @@ app.on('error', (error, ctx) => {
       message = '用户名已经存在!'
       break
   }
+
+  ctx.body = { code, message }
 })

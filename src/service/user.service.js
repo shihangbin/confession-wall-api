@@ -2,17 +2,13 @@ const connection = require('../app/database')
 
 class userService {
   async create(user) {
-    const { username, userpassword } = user
+    const { username, password } = user
 
     // 拼接statement
-    const statement =
-      'INSERT INTO `users` (username,userpassword) VALUES(?, ?);'
+    const statement = 'INSERT INTO `users` (username,password) VALUES(?, ?);'
 
     // 执行SQL
-    const [result] = await connection.execute(statement, [
-      username,
-      userpassword,
-    ])
+    const [result] = await connection.execute(statement, [username, password])
     console.log('数据库操作成功')
     return result
   }

@@ -26,6 +26,7 @@ npm i mysql2
 ```js
 // 1.导入app
 const app = require('./app')
+require('./utils/handle-error')
 
 // 2.引入常量
 const { SERVER_PORT } = require('./config/server.config')
@@ -108,22 +109,25 @@ module.exports = new userController()
 - service/user.service.js (操作数据库)
 
 ```js
+const connection = require('../app/database')
+
 class userService {
   async create(user) {
-    console.log('数据库操作成功')
-    // console.log(user)
-    const { username, userpassword } = user
+    const { username, password } = user
 
     // 拼接statement
-    const statement =
-      'INSERT INTO `users` (username,userpassword) VALUES(?, ?);'
+    const statement = 'INSERT INTO `users` (username,password) VALUES(?, ?);'
 
     // 执行SQL
-    const [result] = await connection.execute(statement, [
-      username,
-      userpassword,
-    ])
+    const [result] = await connection.execute(statement, [username, password])
+    console.log('数据库操作成功')
     return result
+  }
+  async findUserByName(username) {
+    const statement = 'SELECT * FROM users WHERE username = ?'
+
+    const [values] = await connection.execute(statement, [username])
+    return values
   }
 }
 module.exports = new userService()
@@ -170,7 +174,6 @@ module.exports = connection
 - middleware/user.middleware.js (中间件)
 
 ```js
-const { emit } = require('../app')
 const userService = require('../service/user.service')
 const {
   USERNAME_OR_PASSWORD_NULL,
@@ -179,14 +182,14 @@ const {
 
 const verifyUser = async (ctx, next) => {
   // 用户名密码不能为空
-  const { username, userpassword } = ctx.request.body
-  if (!username || !userpassword) {
-    return emit('error', USERNAME_OR_PASSWORD_NULL, ctx)
+  const { username, password } = ctx.request.body
+  if (!username || !password) {
+    return ctx.app.emit('error', USERNAME_OR_PASSWORD_NULL, ctx)
   }
   // 判断用户名是否存在
   const users = await userService.findUserByName(username)
   if (users.length) {
-    return emit('error', USERNAME_EXISTS, ctx)
+    return ctx.app.emit('error', USERNAME_EXISTS, ctx)
   }
 
   await next()
