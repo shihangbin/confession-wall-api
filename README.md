@@ -17,6 +17,8 @@ npm i mysql2
 
 ## 项目结构
 
+![](https://img.xbin.cn/images/2023/10/12-23-07-efa6af.png)
+
 ![](https://img.xbin.cn/images/2023/10/10-17-49-01e12c.png)
 
 - main
@@ -85,16 +87,18 @@ module.exports = userRouter
 const userService = require('../service/user.service')
 
 class userController {
-  create(ctx, next) {
+  async create(ctx, next) {
     // 获取用户传递过来的数据
     const user = ctx.request.body
-    console.log(user)
 
     // 将user数据存储到数据库
-    userService.create(user)
+    const result = await userService.create(user)
 
     // 查看存储结果,告诉前端
-    ctx.body = '创建用户成功'
+    ctx.body = {
+      message: '创建用户成功',
+      data: result,
+    }
   }
 }
 module.exports = new userController()
@@ -104,9 +108,60 @@ module.exports = new userController()
 
 ```js
 class userService {
-  create(user) {
+  async create(user) {
     console.log('数据库操作成功')
+    // console.log(user)
+    const { username, userpassword } = user
+
+    // 拼接statement
+    const statement =
+      'INSERT INTO `users` (username,userpassword) VALUES(?, ?);'
+
+    // 执行SQL
+    const [result] = await connection.execute(statement, [
+      username,
+      userpassword,
+    ])
+    return result
   }
 }
 module.exports = new userService()
+```
+
+- app/database
+
+```js
+const mysql = require('mysql2')
+
+// 1.创建连接池
+const connectionPool = mysql.createPool({
+  host: 'localhost',
+  port: 3306,
+  database: 'node-wall',
+  user: 'root',
+  password: 'Shb200419',
+  connectionLimit: 5,
+})
+
+// 2.获取连接是否成功
+connectionPool.getConnection((err, connection) => {
+  // 1.判断是否有错误信息
+  if (err) {
+    console.log('获取连接失败~', err)
+    return
+  }
+
+  // 2.获取connection, 尝试和数据库建立一下连接
+  connection.connect((err) => {
+    if (err) {
+      console.log('和数据库交互失败', err)
+    } else {
+      console.log('数据库连接成功, 可以操作数据库~')
+    }
+  })
+})
+
+// 3.获取连接池中连接对象(promise)
+const connection = connectionPool.promise()
+module.exports = connection
 ```
