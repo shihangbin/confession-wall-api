@@ -262,3 +262,59 @@ app.on('error', (error, ctx) => {
   }
 })
 ```
+
+## 自动化路由
+
+- router/index.js
+
+```js
+const fs = require('fs')
+
+const automateRouters = (app) => {
+  // 1.读取当前文件
+  const files = fs.readdirSync(__dirname)
+
+  // 2.遍历所有文件
+  for (const file of files) {
+    if (!file.endsWith('.router.js')) continue
+    const router = require(`./${file}`)
+    app.use(router.routes())
+    app.use(router.allowedMethods())
+  }
+}
+
+module.exports = automateRouters
+```
+
+- app/index.js
+
+```js
+const Koa = require('koa')
+const bodyParser = require('koa-bodyparser')
+const automateRouters = require('../router')
+
+// 创建app
+const app = new Koa()
+
+// 使用中间件
+app.use(bodyParser())
+automateRouters(app)
+
+// 导出app
+module.exports = app
+```
+
+## token
+
+```sh
+# 进入ssl的命令行交互
+openssl
+# 创建私钥
+> genrsa -out private.key 1024
+# 创建公钥
+> rsa -in private.key -pubout -out public.key
+```
+
+![](https://img.xbin.cn/images/2023/10/14-22-42-14ccfa.png)
+
+## 用户登录

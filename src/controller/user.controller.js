@@ -1,6 +1,6 @@
 const userService = require('../service/user.service')
 
-class userController {
+class UserController {
   async create(ctx, next) {
     // 获取用户传递过来的数据
     const user = ctx.request.body
@@ -15,4 +15,4 @@ class userController {
     }
   }
 }
-module.exports = new userController()
+module.exports = new UserController()
