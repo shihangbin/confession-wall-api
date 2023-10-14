@@ -310,11 +310,90 @@ module.exports = app
 # 进入ssl的命令行交互
 openssl
 # 创建私钥
-> genrsa -out private.key 1024
+> openssl genrsa -out private.key 2048
 # 创建公钥
-> rsa -in private.key -pubout -out public.key
+> openssl rsa -in private.key -pubout -out public.key
+# 安装token颁发
+npm install jsonwebtoken
 ```
 
 ![](https://img.xbin.cn/images/2023/10/14-22-42-14ccfa.png)
+
+```js
+// login.router.js
+userRouter.post('/', verifyLogin, login)
+```
+
+```js
+// login.middleware.js
+const {
+  USERNAME_OR_PASSWORD_NULL,
+  USERNAME_IF_EXISTS,
+  USERNAME_IF_NOT_EXISTS,
+  PASSWORD_IS_CORRECT,
+} = require('../config/error.config')
+const userService = require('../service/user.service')
+const md5Password = require('../utils/md5-password')
+
+const verifyLogin = async (ctx, next) => {
+  const { username, password } = ctx.request.body
+
+  // 用户密码不为空
+  if (!username || !password) {
+    return ctx.app.emit('error', USERNAME_OR_PASSWORD_NULL, ctx)
+  }
+
+  // 数据库中查询用户名是否存在
+  const users = await userService.findUserByName(username)
+  const user = users[0]
+  if (!user) {
+    return ctx.app.emit('error', USERNAME_IF_NOT_EXISTS, ctx)
+  }
+
+  // 数据库中查询账号密码是否正确
+  if (user.password != md5Password(password)) {
+    return ctx.app.emit('error', PASSWORD_IS_CORRECT, ctx)
+  }
+
+  // 将user对象保存在users中
+  ctx.users = user
+
+  // 执行下一个中间件
+  await next()
+}
+
+module.exports = { verifyLogin }
+```
+
+```js
+// login.controller.js
+const jwt = require('jsonwebtoken')
+const { PRIVATE_KEY } = require('../config/keys')
+
+class LoginController {
+  login(ctx, next) {
+    //  1.获取用户信息
+    const { user_id, username } = ctx.users
+
+    // 2.颁发令牌token
+    const token = jwt.sign({ user_id, username }, PRIVATE_KEY, {
+      expiresIn: 24 * 60 * 60 * 7,
+      algorithm: 'RS256',
+    })
+
+    // 3.返回用户信息
+    ctx.body = {
+      code: 0,
+      data: {
+        userId: user_id,
+        username,
+        token,
+      },
+    }
+  }
+}
+
+module.exports = new LoginController()
+```
 
 ## 用户登录

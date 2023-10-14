@@ -1,5 +1,5 @@
 const KoaRouter = require('@koa/router')
-const { login } = require('../controller/login.controller')
+const { login, sign } = require('../controller/login.controller')
 const { verifyLogin } = require('../middleware/login.middleware')
 
 const userRouter = new KoaRouter({ prefix: '/login' })
