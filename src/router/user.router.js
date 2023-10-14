@@ -6,7 +6,7 @@ const { verifyUser, handlePassword } = require('../middleware/user.middleware')
 const userRouter = new KoaRouter({ prefix: '/users' })
 
 // 定义路由中映射
-userRouter.get('/', verifyUser, handlePassword, userController.create)
+userRouter.post('/', verifyUser, handlePassword, userController.create)
 
 // 导出路由
 module.exports = userRouter

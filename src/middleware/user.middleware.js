@@ -1,8 +1,9 @@
 const userService = require('../service/user.service')
 const {
   USERNAME_OR_PASSWORD_NULL,
-  USERNAME_EXISTS,
+  USERNAME_IF_EXISTS,
 } = require('../config/error.config')
+
 const md5Password = require('../utils/md5-password')
 
 const verifyUser = async (ctx, next) => {
@@ -14,7 +15,7 @@ const verifyUser = async (ctx, next) => {
   // 判断用户名是否存在
   const users = await userService.findUserByName(username)
   if (users.length) {
-    return ctx.app.emit('error', USERNAME_EXISTS, ctx)
+    return ctx.app.emit('error', USERNAME_IF_EXISTS, ctx)
   }
 
   await next()

@@ -1,6 +1,7 @@
 const connection = require('../app/database')
 
 class userService {
+  // 创建用户
   async create(user) {
     const { username, password } = user
 
@@ -12,6 +13,7 @@ class userService {
     console.log('数据库操作成功')
     return result
   }
+  // 查询用户名
   async findUserByName(username) {
     const statement = 'SELECT * FROM users WHERE username = ?'
 
