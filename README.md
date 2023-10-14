@@ -171,6 +171,21 @@ const connection = connectionPool.promise()
 module.exports = connection
 ```
 
+- utils/md5-password.js (密码加密)
+
+```js
+const crypto = require('crypto')
+
+const md5Password = (password) => {
+  const md5 = crypto.createHash('md5')
+  const md5pwd = md5.update(password).digest('hex')
+
+  return md5pwd
+}
+
+module.exports = md5Password
+```
+
 - middleware/user.middleware.js (中间件)
 
 ```js
@@ -179,6 +194,7 @@ const {
   USERNAME_OR_PASSWORD_NULL,
   USERNAME_EXISTS,
 } = require('../config/error.config')
+const md5Password = require('../utils/md5-password')
 
 const verifyUser = async (ctx, next) => {
   // 用户名密码不能为空
@@ -195,7 +211,18 @@ const verifyUser = async (ctx, next) => {
   await next()
 }
 
-module.exports = { verifyUser }
+const handlePassword = async (ctx, next) => {
+  // 1.取出密码
+  const { password } = ctx.request.body
+
+  // 2.对密码进行加密
+  ctx.request.body.password = md5Password(password)
+
+  // 3.执行下一个中间件
+  await next()
+}
+
+module.exports = { verifyUser, handlePassword }
 ```
 
 - config/error.config.js (错误常量)
