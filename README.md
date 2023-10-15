@@ -371,12 +371,12 @@ const jwt = require('jsonwebtoken')
 const { PRIVATE_KEY } = require('../config/keys')
 
 class LoginController {
-  login(ctx, next) {
-    //  1.获取用户信息
-    const { user_id, username } = ctx.user
+  signUser(ctx, next) {
+    // 1.获取用户信息
+    const { id, username } = ctx.user
 
     // 2.颁发令牌token
-    const token = jwt.sign({ user_id, username }, PRIVATE_KEY, {
+    const token = jwt.sign({ id, username }, PRIVATE_KEY, {
       expiresIn: 24 * 60 * 60 * 7,
       algorithm: 'RS256',
     })
@@ -385,7 +385,7 @@ class LoginController {
     ctx.body = {
       code: 0,
       data: {
-        userId: user_id,
+        id,
         username,
         token,
       },
@@ -409,23 +409,24 @@ userRouter.get('/test', verifyAuth, test)
 ```js
 // token验证
 const verifyAuth = async (ctx, next) => {
-  // 获取token
-  const authorization = ctx.header.authorization
+  // 1.获取token
+  const authorization = ctx.headers.authorization
   if (!authorization) {
     return ctx.app.emit('error', AUTH_TOKEN, ctx)
   }
   const token = authorization.replace('Bearer ', '')
 
-  // 验证token
+  // 2.验证token是否是有效
   try {
-    // 验证token中的信息
+    // 2.1.获取token中信息
     const result = jwt.verify(token, PUBLIC_KEY, {
       algorithms: ['RS256'],
     })
 
-    // 将token保留下来
+    // 2.将token的信息保留下来
     ctx.user = result
 
+    // 3.执行下一个中间件
     await next()
   } catch (error) {
     ctx.app.emit('error', AUTH_TOKEN, ctx)
@@ -437,6 +438,11 @@ const verifyAuth = async (ctx, next) => {
 
 ```js
 test(ctx, next) {
-   ctx.body = 'token验证通过'
- }
+   ctx.body = {
+     code: 0,
+     message: 'token验证通过',
+   }
+}
 ```
+
+## 创建文章

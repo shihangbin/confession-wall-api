@@ -1,13 +1,18 @@
 const KoaRouter = require('@koa/router')
 const { verifyAuth } = require('../middleware/login.middleware')
 const {
-  createArticle,
+  articleCreate,
   articleList,
+  articleDetail,
+  articleRemove,
 } = require('../controller/article.controller')
+const { verifyPermission } = require('../middleware/permission.middleware')
 
-const userRouter = new KoaRouter({ prefix: '/article' })
+const articleRouter = new KoaRouter({ prefix: '/article' })
 
-userRouter.post('/', verifyAuth, createArticle)
-userRouter.get('/', verifyAuth, articleList)
+articleRouter.post('/', verifyAuth, articleCreate)
+articleRouter.get('/', articleList)
+articleRouter.get('/:articleId', articleDetail)
+articleRouter.delete('/:articleId', verifyAuth, verifyPermission, articleRemove)
 
-module.exports = userRouter
+module.exports = articleRouter

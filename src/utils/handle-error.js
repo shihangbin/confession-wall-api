@@ -5,6 +5,7 @@ const {
   USERNAME_IF_NOT_EXISTS,
   PASSWORD_IS_CORRECT,
   AUTH_TOKEN,
+  OPERATION_IS_NOT_ALLOWED,
 } = require('../config/error.config')
 
 app.on('error', (error, ctx) => {
@@ -31,6 +32,10 @@ app.on('error', (error, ctx) => {
     case AUTH_TOKEN:
       code = -1005
       message = 'token过期!'
+      break
+    case OPERATION_IS_NOT_ALLOWED:
+      code = -1006
+      message = '没有权限!'
       break
   }
 
