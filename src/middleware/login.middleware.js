@@ -39,7 +39,7 @@ const verifyLogin = async (ctx, next) => {
 // token验证
 const verifyAuth = async (ctx, next) => {
   // 获取token
-  const authorization = ctx.header.authorization
+  const authorization = ctx.headers.authorization
   if (!authorization) {
     return ctx.app.emit('error', AUTH_TOKEN, ctx)
   }

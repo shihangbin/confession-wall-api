@@ -1,12 +1,12 @@
 const userService = require('../service/user.service')
 
 class UserController {
-  async create(ctx, next) {
+  async createUser(ctx, next) {
     // 获取用户传递过来的数据
     const user = ctx.request.body
 
     // 将user数据存储到数据库
-    const result = await userService.create(user)
+    const result = await userService.createUser(user)
 
     // 查看存储结果,告诉前端
     ctx.body = {

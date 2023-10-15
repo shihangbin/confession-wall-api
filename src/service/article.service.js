@@ -2,7 +2,7 @@ const connection = require('../app/database')
 
 class ArticleService {
   // 创建文章
-  async create(contents) {
+  async createArticle(contents) {
     const { id, content } = contents
     // 拼接statement
     const statement = 'INSERT INTO `article` (user_id, content) VALUES(?, ?);'

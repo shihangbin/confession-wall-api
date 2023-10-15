@@ -1,15 +1,16 @@
 const ArticleService = require('../service/article.service')
 
 class ArticleController {
-  async create(ctx, next) {
+  async createArticle(ctx, next) {
+    // 1.获取body中参数
     const { content } = ctx.request.body
     const { id } = ctx.user
 
-    const result = await ArticleService.create(id, content)
-
+    // 2.操作数据库, 将数据进行存储
+    const result = await ArticleService.createArticle(id, content)
     ctx.body = {
       code: 0,
-      message: '文章创建成功',
+      message: '文章发布成功~',
       data: result,
     }
   }
