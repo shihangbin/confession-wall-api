@@ -30,7 +30,7 @@ const verifyLogin = async (ctx, next) => {
     return ctx.app.emit('error', PASSWORD_IS_CORRECT, ctx)
   }
   // 将user对象保存在users中
-  ctx.users = user
+  ctx.user = user
 
   // 执行下一个中间件
   await next()
@@ -53,7 +53,7 @@ const verifyAuth = async (ctx, next) => {
     })
 
     // 将token保留下来
-    ctx.users = result
+    ctx.user = result
 
     await next()
   } catch (error) {

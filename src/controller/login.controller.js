@@ -4,7 +4,7 @@ const { PRIVATE_KEY } = require('../config/keys')
 class LoginController {
   sign(ctx, next) {
     //  1.获取用户信息
-    const { id, username } = ctx.users
+    const { id, username } = ctx.user
 
     // 2.颁发令牌token
     const token = jwt.sign({ id, username }, PRIVATE_KEY, {

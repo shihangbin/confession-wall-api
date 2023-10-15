@@ -356,7 +356,7 @@ const verifyLogin = async (ctx, next) => {
   }
 
   // 将user对象保存在users中
-  ctx.users = user
+  ctx.user = user
 
   // 执行下一个中间件
   await next()
@@ -373,7 +373,7 @@ const { PRIVATE_KEY } = require('../config/keys')
 class LoginController {
   login(ctx, next) {
     //  1.获取用户信息
-    const { user_id, username } = ctx.users
+    const { user_id, username } = ctx.user
 
     // 2.颁发令牌token
     const token = jwt.sign({ user_id, username }, PRIVATE_KEY, {
@@ -424,7 +424,7 @@ const verifyAuth = async (ctx, next) => {
     })
 
     // 将token保留下来
-    ctx.users = result
+    ctx.user = result
 
     await next()
   } catch (error) {
