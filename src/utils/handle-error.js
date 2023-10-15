@@ -4,6 +4,7 @@ const {
   USERNAME_IF_EXISTS,
   USERNAME_IF_NOT_EXISTS,
   PASSWORD_IS_CORRECT,
+  AUTH_TOKEN,
 } = require('../config/error.config')
 
 app.on('error', (error, ctx) => {
@@ -26,6 +27,10 @@ app.on('error', (error, ctx) => {
     case PASSWORD_IS_CORRECT:
       code = -1004
       message = '密码不正确!'
+      break
+    case AUTH_TOKEN:
+      code = -1005
+      message = 'token过期!'
       break
   }
 

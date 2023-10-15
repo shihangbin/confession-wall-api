@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const { PRIVATE_KEY } = require('../config/keys')
 
 class LoginController {
-  login(ctx, next) {
+  sign(ctx, next) {
     //  1.获取用户信息
     const { user_id, username } = ctx.users
 
@@ -21,6 +21,10 @@ class LoginController {
         token,
       },
     }
+  }
+
+  test(ctx, next) {
+    ctx.body = 'token验证通过'
   }
 }
 

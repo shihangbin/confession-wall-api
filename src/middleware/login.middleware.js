@@ -1,12 +1,15 @@
 const {
   USERNAME_OR_PASSWORD_NULL,
-  USERNAME_IF_EXISTS,
   USERNAME_IF_NOT_EXISTS,
   PASSWORD_IS_CORRECT,
+  AUTH_TOKEN,
 } = require('../config/error.config')
+const { PUBLIC_KEY } = require('../config/keys')
 const userService = require('../service/user.service')
 const md5Password = require('../utils/md5-password')
+const jwt = require('jsonwebtoken')
 
+// 登录验证
 const verifyLogin = async (ctx, next) => {
   const { username, password } = ctx.request.body
 
@@ -34,4 +37,29 @@ const verifyLogin = async (ctx, next) => {
   await next()
 }
 
-module.exports = { verifyLogin }
+// token验证
+const verifyAuth = async (ctx, next) => {
+  // 获取token
+  const authorization = ctx.header.authorization
+  if (!authorization) {
+    return ctx.app.emit('error', AUTH_TOKEN, ctx)
+  }
+  const token = authorization.replace('Bearer ', '')
+
+  // 验证token
+  try {
+    // 验证token中的信息
+    const result = jwt.verify(token, PUBLIC_KEY, {
+      algorithms: ['RS256'],
+    })
+
+    // 将token保留下来
+    ctx.users = result
+
+    await next()
+  } catch (error) {
+    ctx.app.emit('error', AUTH_TOKEN, ctx)
+  }
+}
+
+module.exports = { verifyLogin, verifyAuth }

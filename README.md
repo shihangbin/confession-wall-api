@@ -304,7 +304,7 @@ automateRouters(app)
 module.exports = app
 ```
 
-## token
+## 用户登录-token 颁发
 
 ```sh
 # 进入ssl的命令行交互
@@ -396,4 +396,47 @@ class LoginController {
 module.exports = new LoginController()
 ```
 
-## 用户登录
+## 用户登录-token 验证
+
+- router/login.router.js
+
+```js
+userRouter.get('/test', verifyAuth, test)
+```
+
+- middleware/login.middleware.js
+
+```js
+// token验证
+const verifyAuth = async (ctx, next) => {
+  // 获取token
+  const authorization = ctx.header.authorization
+  if (!authorization) {
+    return ctx.app.emit('error', AUTH_TOKEN, ctx)
+  }
+  const token = authorization.replace('Bearer ', '')
+
+  // 验证token
+  try {
+    // 验证token中的信息
+    const result = jwt.verify(token, PUBLIC_KEY, {
+      algorithms: ['RS256'],
+    })
+
+    // 将token保留下来
+    ctx.users = result
+
+    await next()
+  } catch (error) {
+    ctx.app.emit('error', AUTH_TOKEN, ctx)
+  }
+}
+```
+
+- controller/login.controller.js
+
+```js
+test(ctx, next) {
+   ctx.body = 'token验证通过'
+ }
+```
