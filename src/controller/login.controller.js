@@ -3,7 +3,7 @@ const { PRIVATE_KEY } = require('../config/keys')
 
 class LoginController {
   signUser(ctx, next) {
-    //  1.获取用户信息
+    // 1.获取用户信息
     const { id, username } = ctx.user
 
     // 2.颁发令牌token

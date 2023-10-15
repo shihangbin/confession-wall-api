@@ -31,6 +31,7 @@ const verifyLogin = async (ctx, next) => {
   }
   // 将user对象保存在users中
   ctx.user = user
+  console.log(ctx.user)
 
   // 执行下一个中间件
   await next()
@@ -38,23 +39,24 @@ const verifyLogin = async (ctx, next) => {
 
 // token验证
 const verifyAuth = async (ctx, next) => {
-  // 获取token
+  // 1.获取token
   const authorization = ctx.headers.authorization
   if (!authorization) {
     return ctx.app.emit('error', AUTH_TOKEN, ctx)
   }
   const token = authorization.replace('Bearer ', '')
 
-  // 验证token
+  // 2.验证token是否是有效
   try {
-    // 验证token中的信息
+    // 2.1.获取token中信息
     const result = jwt.verify(token, PUBLIC_KEY, {
       algorithms: ['RS256'],
     })
 
-    // 将token保留下来
+    // 2.将token的信息保留下来
     ctx.user = result
 
+    // 3.执行下一个中间件
     await next()
   } catch (error) {
     ctx.app.emit('error', AUTH_TOKEN, ctx)

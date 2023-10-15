@@ -2,14 +2,11 @@ const connection = require('../app/database')
 
 class ArticleService {
   // 创建文章
-  async createArticle(contents) {
-    const { id, content } = contents
+  async createArticle(content, userId) {
     // 拼接statement
-    const statement = 'INSERT INTO `article` (user_id, content) VALUES(?, ?);'
-
+    const statement = 'INSERT INTO article (content, user_id) VALUES (?, ?);'
     // 执行SQL
-    const [result] = await connection.execute(statement, [id, content])
-    console.log('数据库操作成功')
+    const [result] = await connection.execute(statement, [content, userId])
     return result
   }
 
