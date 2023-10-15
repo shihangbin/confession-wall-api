@@ -5,7 +5,7 @@ const {
   AUTH_TOKEN,
 } = require('../config/error.config')
 const { PUBLIC_KEY } = require('../config/keys')
-const userService = require('../service/user.service')
+const { findUserByName } = require('../service/user.service')
 const md5Password = require('../utils/md5-password')
 const jwt = require('jsonwebtoken')
 
@@ -19,7 +19,7 @@ const verifyLogin = async (ctx, next) => {
   }
 
   // 数据库中查询用户名是否存在
-  const users = await userService.findUserByName(username)
+  const users = await findUserByName(username)
   const user = users[0]
   if (!user) {
     return ctx.app.emit('error', USERNAME_IF_NOT_EXISTS, ctx)

@@ -1,6 +1,6 @@
 const connection = require('../app/database')
 
-class userService {
+class UserService {
   // 创建用户
   async create(user) {
     const { username, password } = user
@@ -21,4 +21,4 @@ class userService {
     return values
   }
 }
-module.exports = new userService()
+module.exports = new UserService()

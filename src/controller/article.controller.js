@@ -1,11 +1,11 @@
-const { create, queryList } = require('../service/article.service')
+const ArticleService = require('../service/article.service')
 
 class ArticleController {
   async create(ctx, next) {
     const { content } = ctx.request.body
     const { id } = ctx.user
 
-    const result = await create(id, content)
+    const result = await ArticleService.create(id, content)
 
     ctx.body = {
       code: 0,
@@ -17,7 +17,7 @@ class ArticleController {
   async list(ctx, next) {
     const { offset, size } = ctx.query
 
-    const result = await queryList(offset, size)
+    const result = await ArticleService.queryList(offset, size)
 
     ctx.body = {
       code: 0,
