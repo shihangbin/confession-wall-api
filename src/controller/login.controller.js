@@ -4,10 +4,10 @@ const { PRIVATE_KEY } = require('../config/keys')
 class LoginController {
   sign(ctx, next) {
     //  1.获取用户信息
-    const { user_id, username } = ctx.users
+    const { id, username } = ctx.users
 
     // 2.颁发令牌token
-    const token = jwt.sign({ user_id, username }, PRIVATE_KEY, {
+    const token = jwt.sign({ id, username }, PRIVATE_KEY, {
       expiresIn: 24 * 60 * 60 * 7,
       algorithm: 'RS256',
     })
@@ -16,7 +16,7 @@ class LoginController {
     ctx.body = {
       code: 0,
       data: {
-        userId: user_id,
+        id,
         username,
         token,
       },

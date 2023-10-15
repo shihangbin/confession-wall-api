@@ -29,7 +29,6 @@ const verifyLogin = async (ctx, next) => {
   if (user.password != md5Password(password)) {
     return ctx.app.emit('error', PASSWORD_IS_CORRECT, ctx)
   }
-
   // 将user对象保存在users中
   ctx.users = user
 
