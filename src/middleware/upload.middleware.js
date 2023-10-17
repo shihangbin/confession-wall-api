@@ -1,8 +1,8 @@
-const KoaMulter = require('@koa/multer')
+const multer = require('@koa/multer')
 const path = require('path')
 const { UPLOAD_PATH } = require('../config/path')
 
-const storage = KoaMulter.diskStorage({
+const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, UPLOAD_PATH)
   },
@@ -10,10 +10,12 @@ const storage = KoaMulter.diskStorage({
     cb(null, Date.now() + path.extname(file.originalname))
   },
 })
-const uploadFile = KoaMulter({
+
+// 上传头像的中间件
+const uploadAvatar = multer({
   storage,
 })
 
-const multerObtain = uploadFile.array('avatar')
+const multerObtain = uploadAvatar.array('avatar')
 
 module.exports = { multerObtain }
