@@ -31,7 +31,6 @@ const verifyLogin = async (ctx, next) => {
   }
   // 将user对象保存在users中
   ctx.user = user
-  console.log(ctx.user)
 
   // 执行下一个中间件
   await next()

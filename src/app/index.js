@@ -1,5 +1,5 @@
 const Koa = require('koa')
-const bodyParser = require('koa-bodyparser')
+const { bodyParser } = require('@koa/bodyparser')
 const automateRouters = require('../router')
 
 // 创建app
