@@ -6,7 +6,7 @@ class UserService {
     const { username, password } = user
 
     // 拼接statement
-    const statement = 'INSERT INTO `user` (username,password) VALUES(?, ?);'
+    const statement = 'INSERT INTO `user` (username, password) VALUES(?, ?);'
 
     // 执行SQL
     const [result] = await connection.execute(statement, [username, password])
