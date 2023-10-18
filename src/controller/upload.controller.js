@@ -3,6 +3,7 @@ const path = require('path')
 const OSS = require('ali-oss')
 const { AVATAR_URL } = require('../config/path')
 const UploadService = require('../service/upload.service')
+const UserService = require('../service/user.service')
 
 class UploadController {
   async uploadFile(ctx, next) {
@@ -15,9 +16,12 @@ class UploadController {
       const filePath = file.path.split('\\')[1]
       const url = await put(fileName, filePath)
       const result = await UploadService.avatarUpload(url, id)
+      // const result = await UploadService.avatarUpload(url, id)
       arrayURL.push(url)
     }
-    // console.log(arrayURL)
+    const avatar = arrayURL.slice(-1)[0]
+    const result = await UserService.avatarURL(avatar, id)
+    // console.log(result, '---------------------')
     ctx.body = {
       code: 0,
       message: '上传成功!',
@@ -34,7 +38,7 @@ class UploadController {
       try {
         let stream = fs.createReadStream(`${fileName}/${filePath}`)
         let result = await client.putStream(`school-wall/${filePath}`, stream)
-
+        // console.log(`${AVATAR_URL}${result.name}`)
         return `${AVATAR_URL}${result.name}`
       } catch (e) {
         console.log(e)
