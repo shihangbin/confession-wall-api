@@ -16,7 +16,6 @@ const uploadAvatar = multer({
   storage,
 })
 
-const multerObtain = uploadAvatar.array('avatar')
 const multerAvatar = uploadAvatar.single('avatar')
 
-module.exports = { multerObtain, multerAvatar }
+module.exports = { multerAvatar }

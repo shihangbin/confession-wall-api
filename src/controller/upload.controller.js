@@ -1,5 +1,6 @@
 const UploadService = require('../service/upload.service')
 const UserService = require('../service/user.service')
+const { upload } = require('../utils/upload')
 
 class UploadController {
   async upAvatar(ctx, next) {
