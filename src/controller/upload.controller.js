@@ -4,6 +4,7 @@ const OSS = require('ali-oss')
 const { AVATAR_URL } = require('../config/path')
 const UploadService = require('../service/upload.service')
 const UserService = require('../service/user.service')
+const { upDate } = require('../utils/formatDate')
 
 class UploadController {
   async uploadFile(ctx, next) {
@@ -37,7 +38,10 @@ class UploadController {
       })
       try {
         let stream = fs.createReadStream(`${fileName}/${filePath}`)
-        let result = await client.putStream(`school-wall/${filePath}`, stream)
+        let result = await client.putStream(
+          `school-wall/avatar/${upDate()}/${filePath}`,
+          stream
+        )
         // console.log(`${AVATAR_URL}${result.name}`)
         return `${AVATAR_URL}${result.name}`
       } catch (e) {
