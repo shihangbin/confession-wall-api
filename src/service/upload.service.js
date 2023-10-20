@@ -1,13 +1,15 @@
 const connection = require('../app/database')
 
 class UploadService {
-  async avatarUpload(userId, url, fileMimetype, fileSize) {
-    const statement = `INSERT INTO avatar(user_id,url,mimetype,size) VALUES (?,?,?,?);`
+  async avatarUpload(fieldName, fileName, mimetype, fileSize, url, userId) {
+    const statement = `INSERT INTO avatar(fieldname,filename,mimetype,size,url,user_id) VALUES (?,?,?,?,?,?);`
     const [result] = await connection.execute(statement, [
-      userId,
-      url,
-      fileMimetype,
+      fieldName,
+      fileName,
+      mimetype,
       fileSize,
+      url,
+      userId,
     ])
     return result
   }

@@ -1,6 +1,6 @@
 const OSS = require('ali-oss')
 
-const UPLOAD_PATH = './uploads/'
+const UPLOAD_PATH = 'uploads'
 const AVATAR_URL = 'https://img.xbin.cn/'
 const GET_AVATAR_URL = 'http://localhost:51011/upload/avatar/'
 const CLIENT_OSS = new OSS({

@@ -3,9 +3,9 @@ const path = require('path')
 const { AVATAR_URL, CLIENT_OSS } = require('../config/path')
 const { upDate } = require('../utils/formatDate')
 
-const upload = async (fileName, filePath, fileMimetype, file = 'avatar') => {
+const upload = async (destination, fileName, mimetype, file = 'avatar') => {
   const headers = {
-    'Content-Type': fileMimetype,
+    'Content-Type': mimetype,
   }
 
   try {
@@ -17,11 +17,10 @@ const upload = async (fileName, filePath, fileMimetype, file = 'avatar') => {
     // )
     // console.log(result)
     let result = await CLIENT_OSS.put(
-      `school-wall/${file}/${upDate()}/${filePath}`,
-      path.normalize(`${fileName}/${filePath}`),
+      `school-wall/${file}/${upDate()}/${fileName}`,
+      path.normalize(`${destination}/${fileName}`),
       { headers }
     )
-
     // console.log(`${AVATAR_URL}${result.name}`)
     return `${AVATAR_URL}${result.name}`
   } catch (e) {

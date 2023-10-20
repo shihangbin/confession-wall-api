@@ -4,7 +4,6 @@ class UserController {
   async createUser(ctx, next) {
     // 获取用户传递过来的数据
     const user = ctx.request.body
-
     // 将user数据存储到数据库
     const result = await userService.createUser(user)
 

@@ -4,7 +4,6 @@ class UserService {
   // 创建用户
   async createUser(user) {
     const { username, password } = user
-
     // 拼接statement
     const statement = 'INSERT INTO `user` (username, password) VALUES(?, ?);'
 
