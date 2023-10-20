@@ -38,13 +38,13 @@ class UploadController {
 
     const { filename, mimetype, url } = await UploadService.getAvatar(userId)
     ctx.type = mimetype
-    // ctx.body = fs.createReadStream(`${UPLOAD_PATH}/${filename}`)
+    ctx.body = fs.createReadStream(`${UPLOAD_PATH}/${filename}`)
     // ctx.body = url
-    ctx.body = {
-      code: 0,
-      message: '查看头像成功!',
-      url,
-    }
+    // ctx.body = {
+    //   code: 0,
+    //   message: '查看头像成功!',
+    //   url,
+    // }
   }
 }
 
