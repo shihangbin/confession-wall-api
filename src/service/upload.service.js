@@ -2,7 +2,9 @@ const connection = require('../app/database')
 
 class UploadService {
   async avatarUpload(fieldName, fileName, mimetype, fileSize, url, userId) {
-    const statement = `INSERT INTO avatar(fieldname,filename,mimetype,size,url,user_id) VALUES (?,?,?,?,?,?);`
+    const statement =
+      'INSERT INTO avatar (fieldname, filename, mimetype, size, url, user_id) VALUES (?, ?, ?, ?, ?, ?);'
+
     const [result] = await connection.execute(statement, [
       fieldName,
       fileName,
