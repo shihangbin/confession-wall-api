@@ -1,8 +1,9 @@
 const mysql = require('mysql2')
+const { LOCALHOST } = require('../config/server.config')
 
 // 1.创建连接池
 const connectionPool = mysql.createPool({
-  // host: 'localhost',
+  // host: LOCALHOST,
   host: '121.4.125.213',
   port: 3306,
   database: 'node-wall',
