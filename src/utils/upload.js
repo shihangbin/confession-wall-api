@@ -9,17 +9,18 @@ const upload = async (fileName, filePath, fileMimetype, file = 'avatar') => {
   }
 
   try {
-    let stream = fs.createReadStream(`${fileName}/${filePath}`)
-    let result = await CLIENT_OSS.putStream(
+    // let stream = fs.createReadStream(`${fileName}/${filePath}`)
+    // let result = await CLIENT_OSS.putStream(
+    //   `school-wall/${file}/${upDate()}/${filePath}`,
+    //   stream,
+    //   { headers }
+    // )
+    // console.log(result)
+    let result = await CLIENT_OSS.put(
       `school-wall/${file}/${upDate()}/${filePath}`,
-      stream,
+      path.normalize(`${fileName}/${filePath}`),
       { headers }
     )
-    // console.log(result)
-    // let result = await CLIENT_OSS.put(
-    //   `school-wall/${file}/${upDate()}/${filePath}`,
-    //   path.normalize(`${fileName}/${filePath}`)
-    // )
 
     // console.log(`${AVATAR_URL}${result.name}`)
     return `${AVATAR_URL}${result.name}`

@@ -6,7 +6,7 @@ const connectionPool = mysql.createPool({
   host: '121.4.125.213',
   port: 3306,
   database: 'node-wall',
-  user: 'root',
+  user: 'node-wall',
   password: 'Shb200419',
   connectionLimit: 5,
 })

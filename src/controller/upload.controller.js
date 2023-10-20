@@ -1,4 +1,3 @@
-const fs = require('fs')
 const UploadService = require('../service/upload.service')
 const UserService = require('../service/user.service')
 const { upload } = require('../utils/upload')
@@ -31,7 +30,10 @@ class UploadController {
 
     const result = await UploadService.getAvatar(userId)
     ctx.type = result.mimetype
+    // let stream = fs.createReadStream(result.url)
     ctx.body = result.url
+    // console.log(stream)
+    console.log(ctx.body)
     // console.log(result)
     // console.log(ctx.body, ctx.type)
     // ctx.body = {
