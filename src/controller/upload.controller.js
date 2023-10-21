@@ -40,10 +40,14 @@ class UploadController {
     const { userId } = ctx.params
 
     const { filename, mimetype, url } = await UploadService.getAvatar(userId)
-    // ctx.body = fs.createReadStream(`${UPLOAD_PATH}/${filename}`)
-    const response = await axios.get(url, { responseType: 'stream' })
+    // const result = await axios.get(url, { responseType: 'stream' })
+    // const result = await axios.get(url, { responseType: 'arraybuffer' })
+    const result = await axios.get(url, { responseEncoding: 'base64' })
     ctx.type = mimetype
-    ctx.body = response.data
+    // ctx.body = result.data
+    ctx.body = Buffer.from(result.data, 'base64')
+    // ctx.body = fs.createReadStream(`${UPLOAD_PATH}/${filename}`)
+
     // ctx.body = {
     //   code: 0,
     //   message: '查看头像成功!',
