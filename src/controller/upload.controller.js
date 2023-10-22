@@ -2,32 +2,37 @@ const fs = require('fs')
 const UploadService = require('../service/upload.service')
 const UserService = require('../service/user.service')
 const { upload } = require('../utils/upload')
-const { GET_AVATAR_URL, UPLOAD_PATH, AVATAR_URL } = require('../config/path')
+const { GET_AVATAR_URL } = require('../config/path')
 const axios = require('axios')
 
 class UploadController {
   async upAvatar(ctx, next) {
-    const file = ctx.request.file
+    const files = ctx.request.files
+    const isArray = Array.isArray(files.file)
     const { id } = ctx.user
 
-    const fieldName = file.fieldname
-    const destination = file.destination
-    const fileName = file.filename
-    const mimetype = file.mimetype
-    const fileSize = file.size
+    if (isArray) {
+      for (const file of files.file) {
+        const filepath = file.filepath
+        const fileName = file.newFilename
+        const mimetype = file.mimetype
+        const fileSize = file.size
+        const url = await upload(filepath, fileName, mimetype, 'avatar')
+        await UploadService.avatarUpload(fileName, mimetype, fileSize, url, id)
+      }
+    } else if (!isArray) {
+      const file = files.file
+      const filepath = file.filepath
+      const fileName = file.newFilename
+      const mimetype = file.mimetype
+      const fileSize = file.size
+      const url = await upload(filepath, fileName, mimetype, 'avatar')
+      await UploadService.avatarUpload(fileName, mimetype, fileSize, url, id)
+    } else {
+      console.log('错误')
+    }
 
-    const url = await upload(destination, fileName, mimetype, 'avatar')
-    await UploadService.avatarUpload(
-      fieldName,
-      fileName,
-      mimetype,
-      fileSize,
-      url,
-      id
-    )
-    // console.log(GET_AVATAR_URL)
     const avatarURL = `${GET_AVATAR_URL}${id}`
-    // console.log(avatarURL)
     await UserService.avatarURL(avatarURL, id)
 
     ctx.body = {
@@ -40,19 +45,10 @@ class UploadController {
     const { userId } = ctx.params
 
     const { filename, mimetype, url } = await UploadService.getAvatar(userId)
-    // const result = await axios.get(url, { responseType: 'stream' })
-    // const result = await axios.get(url, { responseType: 'arraybuffer' })
-    const result = await axios.get(url, { responseEncoding: 'base64' })
-    ctx.type = mimetype
-    // ctx.body = result.data
-    ctx.body = Buffer.from(result.data, 'base64')
-    // ctx.body = fs.createReadStream(`${UPLOAD_PATH}/${filename}`)
+    const result = await axios.get(url, { responseType: 'stream' })
 
-    // ctx.body = {
-    //   code: 0,
-    //   message: '查看头像成功!',
-    //   url,
-    // }
+    ctx.type = mimetype
+    ctx.body = result.data
   }
 }
 

@@ -446,3 +446,62 @@ test(ctx, next) {
 ```
 
 ## 创建文章
+
+## 头像上传
+
+```sh
+"ali-oss": "^6.18.1",
+"koa": "^2.14.2",
+"koa-body": "^6.0.1",
+"koa-router": "^11.0.2"
+```
+
+```js
+const Koa = require('koa')
+const Router = require('koa-router')
+const fs = require('fs')
+let OSS = require('ali-oss')
+let path = require('path')
+const { koaBody } = require('koa-body')
+
+const app = new Koa()
+const router = new Router()
+
+let client = new OSS({
+  region: 'oss-cn-chengdu',
+  accessKeyId: 'LTAI5t7vdycSdDvrBVDGpvgc',
+  accessKeySecret: 'AH42iMeT8MUACsGysOQZ0hRAPwkQ5c',
+  bucket: 'xbinoss',
+})
+
+// 上传文件
+router.post('/upload', koaBody({ multipart: true }), async (ctx) => {
+  const files = ctx.request.files // 获取上传文件
+  for (let key in files) {
+    let file = files[key]
+
+    let mimetype = file.mimetype
+    const headers = {
+      'Content-Type': mimetype,
+    }
+
+    // 创建可读流
+    const stream = fs.createReadStream(file.filepath)
+    // yuny 为文件，意思是将文件存放到yuny 文件夹下
+    let result = await client.putStream('/files/' + file.newFilename, stream, {
+      headers,
+    })
+    // console.log(result)
+  }
+  let html = `
+    <ul>
+      上传成功
+    </ul>
+  `
+  ctx.body = html
+})
+
+app.use(router.routes(), router.allowedMethods())
+
+app.listen(51011, () => console.log('http://localhost:51011'))
+```
