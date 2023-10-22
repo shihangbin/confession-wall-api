@@ -1,4 +1,3 @@
-const fs = require('fs')
 const UploadService = require('../service/upload.service')
 const UserService = require('../service/user.service')
 const { upload } = require('../utils/upload')
@@ -44,7 +43,7 @@ class UploadController {
   async getAvatar(ctx, next) {
     const { userId } = ctx.params
 
-    const { filename, mimetype, url } = await UploadService.getAvatar(userId)
+    const { mimetype, url } = await UploadService.getAvatar(userId)
     const result = await axios.get(url, { responseType: 'stream' })
 
     ctx.type = mimetype
