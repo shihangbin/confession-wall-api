@@ -469,8 +469,8 @@ const router = new Router()
 
 let client = new OSS({
   region: 'oss-cn-chengdu',
-  accessKeyId: 'LTAI5t7vdycSdDvrBVDGpvgc',
-  accessKeySecret: 'AH42iMeT8MUACsGysOQZ0hRAPwkQ5c',
+  accessKeyId: 'LTAI5tNTq3ru4vcn1Ah6pqtr',
+  accessKeySecret: 'fJFrSgRxagLsja5uwcciNmcIW9Jjdj',
   bucket: 'xbinoss',
 })
 
