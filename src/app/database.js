@@ -3,8 +3,7 @@ const { LOCALHOST } = require('../config/server.config')
 
 // 1.创建连接池
 const connectionPool = mysql.createPool({
-  // host: LOCALHOST,
-  host: '121.4.125.213',
+  host: LOCALHOST,
   port: 3306,
   database: 'node-wall',
   user: 'root',
