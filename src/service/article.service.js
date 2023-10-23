@@ -1,8 +1,19 @@
+const { url } = require('@koa/router')
 const connection = require('../app/database')
 
+let articleData = {
+  content: '',
+  userId: 0,
+  url: '',
+  fileName: '',
+  mimetype: '',
+  fileSize: 0,
+}
 class ArticleService {
   // 创建文章
   async articleCreate(content, userId) {
+    articleData.content = content
+    console.log(articleData)
     // 拼接statement
     const statement = `
       INSERT INTO articles (content, author_id)
@@ -13,22 +24,22 @@ class ArticleService {
     return result
   }
 
-  async imagesUpload(url, fileName, mimetype, fileSize) {
-    const statement = `
-        INSERT INTO articles ( content, author_id)
-        VALUES ('文章内容', 10); 
+  async imagesUpload(objImg) {
+    console.log(objImg)
 
-        SET @article_id = LAST_INSERT_ID();
-        INSERT INTO avatar_images (article_id,url,filename,mimetype,size) VALUES (@article_id, ?, ?, ?, ?);
-      `
-
-    const [result] = await connection.execute(statement, [
-      url,
-      fileName,
-      mimetype,
-      fileSize,
-    ])
-    return result
+    // const statement = `
+    //     INSERT INTO articles ( content, author_id)
+    //     VALUES ('文章内容', 10);
+    //     SET @article_id = LAST_INSERT_ID();
+    //     INSERT INTO avatar_images (article_id,url,filename,mimetype,size) VALUES (@article_id, ?, ?, ?, ?);
+    //   `
+    // const [result] = await connection.execute(statement, [
+    //   url,
+    //   fileName,
+    //   mimetype,
+    //   fileSize,
+    // ])
+    // return result
   }
 
   async articleList(offset = 0, size = 10) {
