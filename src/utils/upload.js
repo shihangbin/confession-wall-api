@@ -1,5 +1,4 @@
 const fs = require('fs')
-const path = require('path')
 const { AVATAR_URL, CLIENT_OSS } = require('../config/path')
 const { upDate } = require('../utils/formatDate')
 

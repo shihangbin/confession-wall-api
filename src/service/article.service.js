@@ -4,9 +4,30 @@ class ArticleService {
   // 创建文章
   async articleCreate(content, userId) {
     // 拼接statement
-    const statement = 'INSERT INTO article (content, user_id) VALUES (?, ?);'
+    const statement = `
+      INSERT INTO articles (content, author_id)
+      VALUES (?, ?);
+    `
     // 执行SQL
     const [result] = await connection.execute(statement, [content, userId])
+    return result
+  }
+
+  async imagesUpload(url, fileName, mimetype, fileSize) {
+    const statement = `
+        INSERT INTO articles ( content, author_id)
+        VALUES ('文章内容', 10); 
+
+        SET @article_id = LAST_INSERT_ID();
+        INSERT INTO avatar_images (article_id,url,filename,mimetype,size) VALUES (@article_id, ?, ?, ?, ?);
+      `
+
+    const [result] = await connection.execute(statement, [
+      url,
+      fileName,
+      mimetype,
+      fileSize,
+    ])
     return result
   }
 
