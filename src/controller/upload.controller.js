@@ -9,26 +9,23 @@ class UploadController {
     const files = ctx.request.files
     const isArray = Array.isArray(files.file)
     const { id } = ctx.user
+    let file
 
-    if (isArray) {
-      for (const file of files.file) {
-        const filepath = file.filepath
-        const fileName = file.newFilename
-        const mimetype = file.mimetype
-        const fileSize = file.size
-        const url = await upload(filepath, fileName, mimetype, 'avatar')
-        await UploadService.avatarUpload(fileName, mimetype, fileSize, url, id)
-      }
-    } else if (!isArray) {
-      const file = files.file
-      const filepath = file.filepath
-      const fileName = file.newFilename
-      const mimetype = file.mimetype
-      const fileSize = file.size
-      const url = await upload(filepath, fileName, mimetype, 'avatar')
-      await UploadService.avatarUpload(fileName, mimetype, fileSize, url, id)
-    } else {
-      console.log('错误')
+    for (const key in files) {
+      file = files[key]
+      const url = await upload(
+        file.filepath,
+        file.newFilename,
+        file.mimetype,
+        'avatar'
+      )
+      await UploadService.avatarUpload(
+        file.newFilename,
+        file.mimetype,
+        file.size,
+        url,
+        id
+      )
     }
 
     const avatarURL = `${GET_AVATAR_URL}${id}`

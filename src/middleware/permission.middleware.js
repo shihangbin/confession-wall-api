@@ -12,7 +12,6 @@ const verifyPermission = async (ctx, next) => {
   const KeyName = Object.keys(ctx.params)[0]
   const resourceId = ctx.params[KeyName]
   const resourceName = KeyName.replace('Id', '')
-
   // 查询User的Id是否有修改权限
   const isPermission = await PermissionService.checkResource(
     resourceName,
