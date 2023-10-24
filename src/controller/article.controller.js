@@ -18,56 +18,71 @@ class ArticleController {
 
   async articleImages(ctx, next) {
     const files = ctx.request.files
-    const isArray = Array.isArray(files.file)
-
     let url = []
-    let objImg = {
-      imgUrl: '',
-      filepath: '',
-      fileName: '',
-      mimetype: '',
-      fileSize: 0,
-    }
     let arrayImg = []
+    // ----------------------------------------------------------------
+    for (const key in files) {
+      const file = files[key]
+      if (Array.isArray(file)) {
+        // file.forEach(async (item) => {
+        //   let url_path = await upload(
+        //     item.filepath,
+        //     item.newFilename,
+        //     item.mimetype,
+        //     'article_images'
+        //   )
+        //   item.filepath = url_path
+        //   arrayImg.push(item)
+        //   await console.log(arrayImg)
+        // })
+        let a = file.map(async (item) => {
+          let url_path = await upload(
+            item.filepath,
+            item.newFilename,
+            item.mimetype,
+            'article_images'
+          )
+          item.filepath = url_path
 
-    if (isArray) {
-      for (const file of files.file) {
-        await dataImg(file)
+          return await arrayImg.push(item)
+        })
+        console.log(a)
+      } else {
+        let url_path = await upload(
+          file.filepath,
+          file.newFilename,
+          file.mimetype,
+          'article_images'
+        )
+        file.filepath = url_path
+        arrayImg.push(file)
       }
-    } else if (!isArray) {
-      for (const key in files) {
-        const file = files[key]
-        await dataImg(file)
-      }
-      // await ArticleService.imagesUpload(objImg)
-      // arrImg.push(objImg)
-    } else {
-      console.log('错误')
     }
+    // ----------------------------------------------------------------
 
-    async function dataImg(file) {
-      const filepath = file.filepath
-      const fileName = file.newFilename
-      const mimetype = file.mimetype
-      const fileSize = file.size
+    // async function dataImg(file) {
+    //   const filepath = file.filepath
+    //   const fileName = file.newFilename
+    //   const mimetype = file.mimetype
+    //   const fileSize = file.size
 
-      let url_path = await upload(
-        filepath,
-        fileName,
-        mimetype,
-        'article_images'
-      )
-      url.push(url_path)
-      objImg.imgUrl = url_path
-      objImg.filepath = filepath
-      objImg.fileName = fileName
-      objImg.fileSize = fileSize
-      arrayImg.push(objImg)
-      // await console.log(objImg)
+    //   let url_path = await upload(
+    //     filepath,
+    //     fileName,
+    //     mimetype,
+    //     'article_images'
+    //   )
+    //   url.push(url_path)
+    //   objImg.imgUrl = url_path
+    //   objImg.filepath = filepath
+    //   objImg.fileName = fileName
+    //   objImg.fileSize = fileSize
+    //   // arrayImg.push(objImg)
+    //   await console.log(objImg)
 
-      // console.log(arrayImg.push(objImg))
-    }
-    console.log(arrayImg)
+    //   // console.log(arrayImg.push(objImg))
+    // }
+    // console.log(arrayImg)
 
     ctx.body = await {
       code: 0,
