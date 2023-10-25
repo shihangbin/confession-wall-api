@@ -63,11 +63,11 @@ class ArticleService {
           JSON_OBJECT('id', u.id, 'username', u.username, 'avatarURL', u.avatar_path, 'wechat_or_qq', u.wechat_or_qq,'age',u.age,'gender',u.gender,'major',u.major,'class',u.class) user
       FROM articles AS a
       LEFT JOIN users AS u ON u.id = a.author_id
-      WHERE u.id = ? AND a.author_id = ?
+      WHERE a.id = ?
       ORDER BY publication_date DESC;
       `
 
-    const [result] = await connection.execute(statement, [articleId, articleId])
+    const [result] = await connection.execute(statement, [articleId])
     return result
   }
 
