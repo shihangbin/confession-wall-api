@@ -19,7 +19,7 @@ articleRouter.post(
   koaBody({ multipart: true }),
   articleImages
 )
-articleRouter.get('/', verifyAuth, articleList)
+articleRouter.get('/', articleList)
 articleRouter.get('/:articleId', articleDetail)
 articleRouter.delete('/:articleId', verifyAuth, verifyPermission, articleRemove)
 
