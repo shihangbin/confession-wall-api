@@ -9,6 +9,7 @@ class UserController {
 
     // 查看存储结果,告诉前端
     ctx.body = {
+      code: 0,
       message: '创建用户成功',
       data: result,
     }
