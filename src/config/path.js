@@ -2,7 +2,8 @@ const OSS = require('ali-oss')
 const { LOCALHOST } = require('../config/server.config')
 
 const AVATAR_URL = 'https://img.xbin.cn/'
-const GET_AVATAR_URL = `http://${LOCALHOST}:51011/upload/avatar/`
+const IMAGE_URL = 'api.xbin.cn'
+const GET_AVATAR_URL = `http://${IMAGE_URL}:51011/upload/avatar/`
 
 const CLIENT_OSS = new OSS({
   region: 'oss-cn-chengdu',
