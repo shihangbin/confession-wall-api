@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const { PRIVATE_KEY } = require('../config/keys')
+const UserService = require('../service/user.service')
 
 class LoginController {
   signUser(ctx, next) {
@@ -23,10 +24,15 @@ class LoginController {
     }
   }
 
-  test(ctx, next) {
+  async user(ctx, next) {
+    const { id } = ctx.user
+
+    const result = await UserService.userId(id)
+
     ctx.body = {
       code: 0,
       message: 'token验证通过',
+      data: result[0],
     }
   }
 }
