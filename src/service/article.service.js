@@ -16,6 +16,12 @@ class ArticleService {
   }
 
   async imagesUpload(url, filename, mimetype, size) {
+    // 使用条件语句判断是否为 undefined，如果是，则转换为 null
+    url = url === undefined ? null : url
+    filename = filename === undefined ? null : filename
+    mimetype = mimetype === undefined ? null : mimetype
+    size = size === undefined ? null : size
+
     // console.log(url, filename, mimetype, size)
     const statement = `
         INSERT INTO article_images (url,filename,mimetype,size) 

@@ -2,6 +2,12 @@ const connection = require('../app/database')
 
 class UploadService {
   async avatarUpload(fileName, mimetype, fileSize, url, userId) {
+    fileName = fileName === undefined ? null : fileName
+    mimetype = mimetype === undefined ? null : mimetype
+    fileSize = fileSize === undefined ? null : fileSize
+    url = url === undefined ? null : url
+    userId = userId === undefined ? null : userId
+
     const statement =
       'INSERT INTO avatars (filename, mimetype, size, url, user_id) VALUES (?, ?, ?, ?, ?);'
 

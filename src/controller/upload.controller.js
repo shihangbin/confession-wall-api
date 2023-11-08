@@ -7,9 +7,9 @@ const axios = require('axios')
 class UploadController {
   async upAvatar(ctx, next) {
     const files = ctx.request.files
-    const isArray = Array.isArray(files.file)
     const { id } = ctx.user
-    let file
+
+    let file = {}
 
     for (const key in files) {
       file = files[key]

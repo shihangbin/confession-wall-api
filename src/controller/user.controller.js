@@ -14,5 +14,15 @@ class UserController {
       data: result,
     }
   }
+
+  async getUser(ctx, next) {
+    const { userID } = ctx.params
+    const result = await userService.userId(userID)
+    ctx.body = {
+      code: 0,
+      message: '查询用户成功',
+      data: result[0],
+    }
+  }
 }
 module.exports = new UserController()

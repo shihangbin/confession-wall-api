@@ -26,7 +26,7 @@ class ArticleController {
 
   async articleImages(ctx, next) {
     const files = ctx.request.files
-
+    console.log(false)
     let url = []
     // let arrayImg = []
 
@@ -62,9 +62,13 @@ class ArticleController {
 
     ctx.body = await {
       code: 0,
-      message: '头像上传成功!',
+      message: '图片上传成功!',
       url,
     }
+
+    setTimeout(() => {
+      imgIdArr = []
+    }, 60000)
   }
 
   async articleList(ctx, next) {
