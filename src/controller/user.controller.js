@@ -24,5 +24,44 @@ class UserController {
       data: result[0],
     }
   }
+
+  async putUser(ctx, next) {
+    const { userID } = ctx.params
+    const {
+      username,
+      password,
+      avatar_path,
+      nickname,
+      age,
+      role,
+      is_muted,
+      wechat_or_qq,
+      gender,
+      major,
+      school_class,
+      say,
+    } = ctx.request.body
+
+    const result = await userService.putUserInfo(
+      username,
+      password,
+      avatar_path,
+      nickname,
+      age,
+      role,
+      is_muted,
+      wechat_or_qq,
+      gender,
+      major,
+      school_class,
+      say,
+      userID
+    )
+    ctx.body = {
+      code: 0,
+      message: '修改用户信息成功',
+      data: result,
+    }
+  }
 }
 module.exports = new UserController()
