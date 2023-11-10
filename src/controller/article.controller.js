@@ -72,13 +72,24 @@ class ArticleController {
   }
 
   async articleList(ctx, next) {
-    const { offset, size } = ctx.query
+    const { offset, size, sort } = ctx.query
 
-    const result = await ArticleService.articleList(offset, size)
+    const result = await ArticleService.articleList(offset, size, sort)
 
     ctx.body = {
       code: 0,
       message: '文章查询成功',
+      data: result,
+    }
+  }
+
+  async articleSearch(ctx, next) {
+    const { search, offset, size } = ctx.query
+    const result = await ArticleService.articleSearch(search, offset, size)
+
+    ctx.body = {
+      code: 0,
+      message: '文章搜索成功',
       data: result,
     }
   }

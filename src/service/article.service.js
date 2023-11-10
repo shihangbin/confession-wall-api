@@ -45,7 +45,7 @@ class ArticleService {
     }
   }
 
-  async articleList(offset = 0, size = 10) {
+  async articleList(offset = 0, size = 10, sort = 'DESC') {
     const statement = `
       SELECT 
       a.id AS id,
@@ -55,19 +55,23 @@ class ArticleService {
       JSON_OBJECT(
           'id', u.id,
           'username', u.username,
-          'avatarURL', u.avatar_path,
-          'wechat_or_qq', u.wechat_or_qq,
+          'avatar_path', u.avatar_path,
+          'nickname',u.nickname,
           'age', u.age,
+          'role',u.role,
+          'is_muted',u.is_muted,
+          'wechat_or_qq', u.wechat_or_qq,
           'gender', u.gender,
           'major', u.major,
-          'class', u.class
+          'school_class', u.school_class,
+          'say',u.say
       ) AS user,
       JSON_ARRAYAGG(i.url) AS image_urls
       FROM articles AS a
       LEFT JOIN users AS u ON u.id = a.author_id
       LEFT JOIN article_images AS i ON a.id = i.article_id
       GROUP BY a.id, a.content, a.author_id, a.publication_date, user
-      ORDER BY a.publication_date DESC
+      ORDER BY a.publication_date ${sort}
       LIMIT ? OFFSET ?;`
 
     const [result] = await connection.execute(statement, [
@@ -77,7 +81,8 @@ class ArticleService {
     return result
   }
 
-  async articleDetail(articleId) {
+  async articleSearch(search, offset = 0, size = 10) {
+    console.log(search)
     const statement = `
       SELECT 
       a.id AS id,
@@ -87,21 +92,63 @@ class ArticleService {
       JSON_OBJECT(
           'id', u.id,
           'username', u.username,
-          'avatarURL', u.avatar_path,
-          'wechat_or_qq', u.wechat_or_qq,
+          'avatar_path', u.avatar_path,
+          'nickname',u.nickname,
           'age', u.age,
+          'role',u.role,
+          'is_muted',u.is_muted,
+          'wechat_or_qq', u.wechat_or_qq,
           'gender', u.gender,
           'major', u.major,
-          'class', u.class
+          'school_class', u.school_class,
+          'say',u.say
       ) AS user,
       JSON_ARRAYAGG(i.url) AS image_urls
       FROM articles AS a
       LEFT JOIN users AS u ON u.id = a.author_id
       LEFT JOIN article_images AS i ON a.id = i.article_id
-      WHERE a.id = ?
+      WHERE a.content LIKE CONCAT('%', ?, '%')
       GROUP BY a.id, a.content, a.author_id, a.publication_date, user
-      ORDER BY a.publication_date DESC;
-      `
+      ORDER BY a.publication_date DESC
+    LIMIT ? OFFSET ?;`
+
+    const [result] = await connection.execute(statement, [
+      search,
+      String(size),
+      String(offset),
+    ])
+    return result
+  }
+
+  async articleDetail(articleId) {
+    const statement = `
+    SELECT 
+    a.id AS id,
+    a.content AS content,
+    a.author_id AS autohor_id,
+    a.publication_date AS publication_date,
+    JSON_OBJECT(
+        'id', u.id,
+        'username', u.username,
+        'avatar_path', u.avatar_path,
+        'nickname',u.nickname,
+        'age', u.age,
+        'role',u.role,
+        'is_muted',u.is_muted,
+        'wechat_or_qq', u.wechat_or_qq,
+        'gender', u.gender,
+        'major', u.major,
+        'school_class', u.school_class,
+        'say',u.say
+    ) AS user,
+    JSON_ARRAYAGG(i.url) AS image_urls
+    FROM articles AS a
+    LEFT JOIN users AS u ON u.id = a.author_id
+    LEFT JOIN article_images AS i ON a.id = i.article_id
+    WHERE a.id = ?
+    GROUP BY a.id, a.content, a.author_id, a.publication_date, user
+    ORDER BY a.publication_date DESC;
+    `
 
     const [result] = await connection.execute(statement, [articleId])
     return result

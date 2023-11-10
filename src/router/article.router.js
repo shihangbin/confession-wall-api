@@ -4,6 +4,7 @@ const { verifyAuth } = require('../middleware/login.middleware')
 const {
   articleCreate,
   articleList,
+  articleSearch,
   articleDetail,
   articleRemove,
   articleImages,
@@ -20,6 +21,7 @@ articleRouter.post(
   articleImages
 )
 articleRouter.get('/', articleList)
+articleRouter.get('/search', articleSearch)
 articleRouter.get('/:articleId', articleDetail)
 articleRouter.delete('/:articleId', verifyAuth, verifyPermission, articleRemove)
 
