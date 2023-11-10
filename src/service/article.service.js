@@ -3,15 +3,19 @@ const connection = require('../app/database')
 
 class ArticleService {
   // 创建文章
-  async articleCreate(content, userId) {
+  async articleCreate(content, assort = 1, userId) {
     // 拼接statement
     const statement = `
-      INSERT INTO articles (content, author_id)
-      VALUES (?, ?);
+      INSERT INTO articles (content, assort,author_id)
+      VALUES (?, ?, ?);
     `
 
     // 执行SQL
-    const [result] = await connection.execute(statement, [content, userId])
+    const [result] = await connection.execute(statement, [
+      content,
+      assort,
+      userId,
+    ])
     return result
   }
 
@@ -45,12 +49,13 @@ class ArticleService {
     }
   }
 
-  async articleList(offset = 0, size = 10, sort = 'DESC') {
+  async articleList(offset = 0, size = 10, assort = 1, sort = 'DESC') {
     const statement = `
       SELECT 
       a.id AS id,
       a.content AS content,
       a.author_id AS autohor_id,
+      a.assort AS assort,
       a.publication_date AS publication_date,
       JSON_OBJECT(
           'id', u.id,
@@ -70,11 +75,13 @@ class ArticleService {
       FROM articles AS a
       LEFT JOIN users AS u ON u.id = a.author_id
       LEFT JOIN article_images AS i ON a.id = i.article_id
+      WHERE a.assort = ?
       GROUP BY a.id, a.content, a.author_id, a.publication_date, user
       ORDER BY a.publication_date ${sort}
       LIMIT ? OFFSET ?;`
 
     const [result] = await connection.execute(statement, [
+      assort,
       String(size),
       String(offset),
     ])
@@ -88,6 +95,7 @@ class ArticleService {
       a.id AS id,
       a.content AS content,
       a.author_id AS autohor_id,
+      a.assort AS assort,
       a.publication_date AS publication_date,
       JSON_OBJECT(
           'id', u.id,
@@ -126,6 +134,7 @@ class ArticleService {
     a.id AS id,
     a.content AS content,
     a.author_id AS autohor_id,
+    a.assort AS assort,
     a.publication_date AS publication_date,
     JSON_OBJECT(
         'id', u.id,

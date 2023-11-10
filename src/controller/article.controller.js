@@ -7,11 +7,11 @@ let articleId = ''
 class ArticleController {
   async articleCreate(ctx, next) {
     // 1.获取body中参数
-    const { content } = ctx.request.body
+    const { content, assort } = ctx.request.body
     const { id } = ctx.user
 
     // 2.操作数据库, 将数据进行存储
-    const result = await ArticleService.articleCreate(content, id)
+    const result = await ArticleService.articleCreate(content, assort, id)
     articleId = result.insertId
     await ArticleService.association(articleId, imgIdArr)
     imgIdArr = []
@@ -72,9 +72,8 @@ class ArticleController {
   }
 
   async articleList(ctx, next) {
-    const { offset, size, sort } = ctx.query
-
-    const result = await ArticleService.articleList(offset, size, sort)
+    const { offset, size, sort, assort } = ctx.query
+    const result = await ArticleService.articleList(offset, size, assort, sort)
 
     ctx.body = {
       code: 0,
