@@ -6,7 +6,7 @@ class ArticleService {
   async articleCreate(content, assort = 1, userId) {
     // 拼接statement
     const statement = `
-      INSERT INTO articles (content, assort,author_id)
+      INSERT INTO articles (content, assort, author_id)
       VALUES (?, ?, ?);
     `
 
@@ -115,7 +115,7 @@ class ArticleService {
       FROM articles AS a
       LEFT JOIN users AS u ON u.id = a.author_id
       LEFT JOIN article_images AS i ON a.id = i.article_id
-      WHERE a.content LIKE CONCAT('%', ?, '%')
+      WHERE a.content LIKE CONCAT('%', ?, '%') AND a.assort = 1
       GROUP BY a.id, a.content, a.author_id, a.publication_date, user
       ORDER BY a.publication_date DESC
     LIMIT ? OFFSET ?;`
