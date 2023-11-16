@@ -10,6 +10,7 @@ class LoginController {
     // 2.颁发令牌token
     const token = jwt.sign({ id, username }, PRIVATE_KEY, {
       expiresIn: 24 * 60 * 60 * 7,
+      // expiresIn: 20000,
       algorithm: 'RS256',
     })
 
