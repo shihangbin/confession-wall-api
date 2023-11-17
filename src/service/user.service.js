@@ -11,10 +11,26 @@ class UserService {
     const [result] = await connection.execute(statement, [username, password])
     return result
   }
+
+  async wxLogin(openid) {
+    // 拼接statement
+    const statement = 'INSERT INTO `users` (openid) VALUES(?);'
+    // 执行SQL
+    const [result] = await connection.execute(statement, [openid])
+    return result
+  }
+
   // 查询用户名
   async findUserByName(username) {
     const statement = 'SELECT * FROM users WHERE username = ?'
     const [values] = await connection.execute(statement, [username])
+    return values
+  }
+
+  // 查询用户名
+  async findUserOpenid(openid) {
+    const statement = 'SELECT * FROM users WHERE openid = ?'
+    const [values] = await connection.execute(statement, [openid])
     return values
   }
 
