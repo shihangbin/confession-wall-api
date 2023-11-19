@@ -4,7 +4,6 @@ class CommentController {
   async create(ctx, next) {
     const { content, articleId } = ctx.request.body
     const { id } = ctx.user
-
     const result = await commentMiddleware.create(articleId, id, content)
 
     ctx.body = {
