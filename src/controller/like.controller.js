@@ -5,10 +5,19 @@ class LikeController {
     const { userId, articleId } = ctx.query
     const result = await LikeService.getLike(userId, articleId)
 
+    let isLike = false
+
+    if (!!result.length) {
+      isLike = true
+    } else {
+      isLike = false
+    }
+
     ctx.body = {
       code: 0,
-      message: '点赞查询',
-      data: result[0],
+      message: '是否点赞',
+      data: result,
+      isLike,
     }
   }
 
@@ -18,7 +27,7 @@ class LikeController {
 
     ctx.body = {
       code: 0,
-      message: '点赞查询',
+      message: '用户点赞',
       data: result,
     }
   }
@@ -27,10 +36,19 @@ class LikeController {
     const { articleId } = ctx.query
     const result = await LikeService.getLikeList(articleId)
 
+    let isLike = false
+
+    if (!!result.length) {
+      isLike = true
+    } else {
+      isLike = false
+    }
+
     ctx.body = {
       code: 0,
-      message: '点赞查询',
+      message: '文章点赞',
       data: result,
+      isLike,
     }
   }
 
