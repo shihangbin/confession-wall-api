@@ -23,6 +23,17 @@ class LikeController {
     }
   }
 
+  async getLikeList(ctx, next) {
+    const { articleId } = ctx.query
+    const result = await LikeService.getLikeList(articleId)
+
+    ctx.body = {
+      code: 0,
+      message: '点赞查询',
+      data: result,
+    }
+  }
+
   async postLike(ctx, next) {
     const { id } = ctx.user
     const { articleId } = ctx.request.body

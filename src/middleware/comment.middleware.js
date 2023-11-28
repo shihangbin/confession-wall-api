@@ -29,7 +29,8 @@ class CommentService {
     ) AS user
     FROM comments c
     LEFT JOIN users AS u ON u.id = c.user_id
-    WHERE article_id = ?;`
+    WHERE article_id = ?
+    ORDER BY c.createAt DESC;`
     const [result] = await connection.execute(statement, [commentId])
     return result
   }

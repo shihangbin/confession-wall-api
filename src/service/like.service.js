@@ -13,6 +13,12 @@ class LikeService {
     const [result] = await connection.execute(statement, [userId])
     return result
   }
+  async getLikeList(articleId) {
+    const statement = 'SELECT * FROM likes WHERE article_id = ?;;'
+    // 执行 SQL
+    const [result] = await connection.execute(statement, [articleId])
+    return result
+  }
   async getLike(userId, articleId) {
     const statement = 'SELECT * FROM likes WHERE user_id = ? AND article_id = ?'
     // 执行 SQL
