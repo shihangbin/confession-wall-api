@@ -4,14 +4,14 @@
  Source Server         : ali
  Source Server Type    : MySQL
  Source Server Version : 80024
- Source Host           : 59.110.160.132:3306
- Source Schema         : node-wall
+ Source Host           : api.xbin.cn:3306
+ Source Schema         : nydb
 
  Target Server Type    : MySQL
  Target Server Version : 80024
  File Encoding         : 65001
 
- Date: 28/11/2023 13:41:45
+ Date: 09/12/2023 12:21:29
 */
 
 SET NAMES utf8mb4;
@@ -165,7 +165,7 @@ CREATE TABLE `likes`  (
   INDEX `article_id`(`article_id` ASC) USING BTREE,
   CONSTRAINT `likes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `likes_ibfk_2` FOREIGN KEY (`article_id`) REFERENCES `articles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 325 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 325 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of likes
@@ -198,7 +198,7 @@ CREATE TABLE `users`  (
   UNIQUE INDEX `openid`(`openid` ASC) USING BTREE,
   CONSTRAINT `users_chk_1` CHECK (`age` >= 0),
   CONSTRAINT `users_chk_2` CHECK (`gender` in (_utf8mb4'男',_utf8mb4'女'))
-) ENGINE = InnoDB AUTO_INCREMENT = 54 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 57 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of users
@@ -206,5 +206,8 @@ CREATE TABLE `users`  (
 INSERT INTO `users` VALUES (51, 'admin', 'e10adc3949ba59abbe56e057f20f883e', 'http://api.xbin.cn/upload/avatar/51', '开朗的网友', 0, 'user', 0, '18213331550', '男', 'xx专业', 'xx班级', '不忘初心,方得始终!', '2023-11-21 23:52:06', NULL);
 INSERT INTO `users` VALUES (52, NULL, NULL, 'http://api.xbin.cn/upload/avatar/52', '取啥名字好呢？', 0, 'admin', 0, '18213331550', '男', 'xx专业', 'xx班级', '不忘初心,方得始终!', '2023-11-21 23:52:32', 'oYKCg62jFAM79yxocArIGHXfvvZM');
 INSERT INTO `users` VALUES (53, NULL, NULL, 'http://api.xbin.cn/upload/avatar/53', '开朗的网友', 0, 'user', 0, '18213331550', '男', 'xx专业', 'xx班级', '不忘初心,方得始终!', '2023-11-27 10:43:25', 'oYKCg614mPl_kfu3J8iFJ_cC-9WQ');
+INSERT INTO `users` VALUES (54, NULL, NULL, NULL, '开朗的网友', 0, 'user', 0, '18213331550', '男', 'xx专业', 'xx班级', '不忘初心,方得始终!', '2023-12-09 12:21:11', 'oYKCg61lXrTIpqBTp_dMllfdfHDg');
+INSERT INTO `users` VALUES (55, NULL, NULL, NULL, '开朗的网友', 0, 'user', 0, '18213331550', '男', 'xx专业', 'xx班级', '不忘初心,方得始终!', '2023-12-09 12:21:20', 'oYKCg629CgIG77aFm_RIoqA2jcvE');
+INSERT INTO `users` VALUES (56, NULL, NULL, NULL, '开朗的网友', 0, 'user', 0, '18213331550', '男', 'xx专业', 'xx班级', '不忘初心,方得始终!', '2023-12-09 12:21:21', 'oYKCg66mbd_7Me524cYr0mCDj7w0');
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -5,7 +5,7 @@ const { LOCALHOST } = require('../config/server.config')
 const connectionPool = mysql.createPool({
   host: LOCALHOST,
   port: 3306,
-  database: 'node-wall',
+  database: 'nydb',
   user: 'root',
   password: 'Shb200419',
   connectionLimit: 5,
