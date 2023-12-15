@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken')
 const { PRIVATE_KEY } = require('../config/keys')
 const UserService = require('../service/user.service')
+const { APP_ID, SECRET } = require('../utils/key')
+
 const axios = require('axios')
 
 class LoginController {
@@ -22,6 +24,8 @@ class LoginController {
         id,
         username,
         token,
+        appid: APP_ID,
+        secret: SECRET,
       },
     }
   }
@@ -72,7 +76,9 @@ class LoginController {
       code: 0,
       message: '微信登录成功',
       token,
-      data: result.data,
+      appid: APP_ID,
+      secret: SECRET,
+      // data: result.data,
     }
   }
 }

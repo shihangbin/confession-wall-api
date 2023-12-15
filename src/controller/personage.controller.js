@@ -19,7 +19,7 @@ class PersonageController {
 
     ctx.body = {
       code: 0,
-      message: '点赞查询成功',
+      message: '我的文章查询成功',
       data: result,
     }
   }
