@@ -78,7 +78,7 @@ class LoginController {
       token,
       appid: APP_ID,
       secret: SECRET,
-      // data: result.data,
+      data: result.data,
     }
   }
 }
